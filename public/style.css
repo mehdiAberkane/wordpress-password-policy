@@ -1,0 +1,112 @@
+.submit-form, #password-policy-admin .submit-zone input[type="submit"], #password-policy-admin-user input[type="submit"] {
+  background-color: #0facec;
+  color: white;
+  border: none;
+  width: auto;
+  display: inline-block;
+  text-align: center;
+  padding: .5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  border-radius: .3rem;
+}
+
+.submit-form:hover, #password-policy-admin .submit-zone input:hover[type="submit"], #password-policy-admin-user input:hover[type="submit"] {
+  background-color: #1fe095;
+  cursor: pointer;
+}
+
+.pagination-button, #password-policy-admin-user .user-zone .pagination input[type="submit"] {
+  background-color: #83a6b4;
+  color: white;
+  border: none;
+  width: auto;
+  display: inline-block;
+  text-align: center;
+  padding: .3rem 0.5rem;
+  font-size: 1rem;
+  line-height: 1.2;
+  border-radius: .3rem;
+}
+
+.pagination-button:hover, #password-policy-admin-user .user-zone .pagination input:hover[type="submit"] {
+  background-color: #1fe095;
+  cursor: pointer;
+}
+
+#password-policy-admin {
+  background-color: white;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  padding-top: 10px;
+  padding-bottom: 40px;
+}
+
+#password-policy-admin h1 {
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+
+#password-policy-admin form div {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+#password-policy-admin #number-characters {
+  width: 65px;
+}
+
+#password-policy-admin div label {
+  width: 50%;
+  display: inline-block;
+}
+
+#password-policy-admin .submit-zone {
+  text-align: center;
+  margin-top: 50px;
+}
+
+#password-policy-admin .regex-zone {
+  padding-left: 0;
+  margin-left: 0;
+}
+
+#password-policy-admin .regex-zone input {
+  width: 50%;
+  padding-left: 0;
+}
+
+#password-policy-admin-user .role-zone, #password-policy-admin-user .user-zone {
+  background-color: white;
+  padding: 10px;
+}
+
+#password-policy-admin-user tr {
+  padding: 1px;
+}
+
+#password-policy-admin-user .role-zone {
+  width: 15%;
+  text-align: left;
+  margin-top: 20px;
+}
+
+#password-policy-admin-user .user-zone {
+  width: 50%;
+  text-align: left;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#password-policy-admin-user .user-zone table {
+  width: 80%;
+}
+
+#password-policy-admin-user .user-zone .pagination {
+  text-align: right;
+  padding-right: 10px;
+  margin-top: 20px;
+}
+/*# sourceMappingURL=style.css.map */
