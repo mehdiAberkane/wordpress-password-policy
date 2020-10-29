@@ -33,4 +33,8 @@ Upload the Password-policy plugin to your blog, activate it, and enjoy.
 
 = 0.2 =
 *Release Date - 20 jun 2020*
+* Finish BackOffice
 
+= 1.0.0 =
+*Release Date - 29 oct 2020*
+First Release

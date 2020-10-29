@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Password policy
-Plugin URI: Nop
+Plugin URI: https://github.com/mehdiAberkane/wordpress-password-policy
 Description: A plugin for enfance the password policy for each users.
 Version: 1.0.0
 Author: Mehdi Aberkane
@@ -31,6 +31,7 @@ $password_policy_config = $db->get_config();
 
 /**
  * Function trigger when plugin is enabled
+ * Generate default config in db
  * 
  */
 function password_policy_plugin_activation() {
@@ -44,6 +45,11 @@ function password_policy_plugin_activation() {
 	$db->set_config($arr);
 }
 
+/**
+ * Function trigger when plugin is disabled
+ * He delete all config in db
+ * 
+ */
 function password_policy_plugin_deactivation() {
 	global $db;
 	$db->drop_config();
@@ -53,6 +59,9 @@ register_activation_hook( __FILE__, 'password_policy_plugin_activation' );
 register_deactivation_hook( __FILE__, 'password_policy_plugin_deactivation' );
 require_once( PASSWORD_POLICY_VERSION__PLUGIN_DIR . 'src/check_password_policy.php' );
 
+/**
+ * For CSS in BackOffice
+ */
 function admin_css() {
 	$admin_handle = 'admin_css';
 	$admin_stylesheet = '/wp-content/plugins/password-policy/public/style.css';
@@ -73,6 +82,9 @@ function wpdocs_selectively_enqueue_admin_script($hook) {
 	}
 }
 
+/**
+ * Disable the checkbox for weak password wordpress
+ */
 if ($password_policy_config['weak-password']) {
 	add_action( 'admin_enqueue_scripts', 'wpdocs_selectively_enqueue_admin_script' );
 }
