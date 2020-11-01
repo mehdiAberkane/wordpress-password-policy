@@ -1,8 +1,8 @@
 <?php
 /**
- * CLass Db for connect and interact with the bdd
+ * CLass PSSP_Db for connect and interact with the bdd
  */
-class Db {
+class PSSP_Db {
 
     private $db;
 

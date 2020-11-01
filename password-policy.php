@@ -25,7 +25,7 @@ if (is_admin()) {
 
 require_once( PASSWORD_POLICY_VERSION__PLUGIN_DIR . 'src/class.db.php' );
 
-$db = new Db($wpdb);
+$db = new PSSP_Db($wpdb);
 
 $password_policy_config = $db->get_config();
 

@@ -101,7 +101,7 @@ function pssp_display_config_page() {
 				'enable-uppercase' => $config_sanitized['enable-uppercase'], 'regex-password-option' => $config_sanitized['regex-password-option'],
 				'regex-password' => $config_sanitized['regex-password'])), 'autoload' => false];
 				
-				$db = new Db($wpdb);
+				$db = new PSSP_Db($wpdb);
 				$db->update_config($arr);
 
 				?>
@@ -131,7 +131,7 @@ function pssp_display_config_page() {
 
 	$data_config = json_decode($pw_config[0]->option_value, true);
 
-	$token = New Token();
+	$token = New PSSP_Token();
 	$_SESSION['token'] = $token->display_token();
 
 	$url_doc = "https://blog.usejournal.com/regular-expressions-a-complete-beginners-tutorial-c7327b9fd8eb";
@@ -203,12 +203,12 @@ function pssp_retrieve_password_password_policy($user_data) {
  */
 function pssp_display_page_user() {
 
+	// get_users wp function
 	$users = get_users();
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		if ($_POST['token'] === $_SESSION['token']) {
 
-			//TODO sanitizing 
 			if (isset($_POST['role_name'])) {
 				$role_name = $_POST['role_name'];
 			} else {
@@ -256,7 +256,7 @@ function pssp_display_page_user() {
 		}
 	}
 
-	$token = New Token();
+	$token = New PSSP_Token();
 	$_SESSION['token'] = $token->display_token();
 
 	include('views/view_admin.php');
