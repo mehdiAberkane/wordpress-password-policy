@@ -3,7 +3,7 @@
  * Display admin page in backoffice
 */
 
-add_action('admin_menu', 'add_admin_page');
+add_action('admin_menu', 'pssp_add_admin_page');
 
 session_start();
 
@@ -13,15 +13,16 @@ include_once('class.db.php');
 /**
  * Hook admin page
  */
-function add_admin_page() {
-	add_menu_page( 'Password Policy', 'Password Policy', 'manage_options', 'password-policy', 'display_page' );
-	add_submenu_page( 'password-policy', __('Listes des utilisateurs', 'password-policy'), __('Listes des utilisateurs', 'password-policy'),'manage_options', 'display_page_user', 'display_page_user');
+function pssp_add_admin_page() {
+	add_menu_page( 'Password Policy', 'Password Policy', 'manage_options', 'password-policy', 'pssp_display_config_page' );
+
+	add_submenu_page( 'password-policy', __('Listes des utilisateurs', 'password-policy'), __('Listes des utilisateurs', 'password-policy'),'manage_options', 'pssp_display_page_user', 'pssp_display_page_user');
 }
 
 /**
  * Return all roles
  */
-function get_all_roles() {
+function pssp_get_all_roles() {
 	global $wp_roles;
 	$list_roles = [];
 
@@ -33,30 +34,88 @@ function get_all_roles() {
 }
 
 /**
+ * Check and sanitized the data
+ */
+function pssp_check_config($data) {
+
+	$config_sanitized = [];
+
+	if (!is_int(intval($_POST['number-characters'])))
+		return false;
+	
+	$config_sanitized['number-characters'] = intval($_POST['number-characters']);
+	
+	if ($_POST['weak-password'] == 'true') {
+		$config_sanitized['weak-password'] = true;
+	} else {
+		$config_sanitized['weak-password'] = NULL;
+	}
+
+	if ($_POST['regex-password-option'] == 'true') {
+		$config_sanitized['regex-password-option'] = true;
+	} else {
+		$config_sanitized['regex-password-option'] = NULL;
+	}
+
+	if ($_POST['enable-uppercase'] == 'true') {
+		$config_sanitized['enable-uppercase'] = true;
+	} else {
+		$config_sanitized['enable-uppercase'] = NULL;
+	}
+
+	if ($_POST['enable-number'] == 'true') {
+		$config_sanitized['enable-number'] = true;
+	} else {
+		$config_sanitized['enable-number'] = NULL;
+	}
+
+	if ($_POST['enable-special'] == 'true') {
+		$config_sanitized['enable-special'] = true;
+	} else {
+		$config_sanitized['enable-special'] = NULL;
+	}
+
+	if (is_string($_POST['regex-password'])) {
+		$config_sanitized['regex-password'] = $_POST['regex-password'];
+	} else {
+		$config_sanitized['regex-password'] = base64_encode('^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$');
+	}
+
+	return $config_sanitized;
+}
+
+
+/**
  * Display config page for password policy
  */
-function display_page() {
+function pssp_display_config_page() {
 	global $wpdb;
 	global $locale;
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
 		if ($_POST['token'] === $_SESSION['token']) {
+			$config_sanitized = pssp_check_config($_POST);
+			if ($config_sanitized) {
+				$arr = ['option_name' => '_password_policy_config', 'option_value' => json_encode(array('weak-password' => $config_sanitized['weak-password'], 'number-characters' => $config_sanitized['number-characters']
+				, 'enable-special' => $config_sanitized['enable-special'], 'enable-number' => $config_sanitized['enable-number'], 
+				'enable-uppercase' => $config_sanitized['enable-uppercase'], 'regex-password-option' => $config_sanitized['regex-password-option'],
+				'regex-password' => $config_sanitized['regex-password'])), 'autoload' => false];
+				
+				$db = new Db($wpdb);
+				$db->update_config($arr);
 
-			$arr = ['option_name' => '_password_policy_config', 'option_value' => json_encode(array('weak-password' => $_POST['weak-password'], 'number-characters' => $_POST['number-characters']
-			, 'enable-special' => $_POST['enable-special'], 'enable-number' => $_POST['enable-number'], 
-			'enable-uppercase' => $_POST['enable-uppercase'], 'regex-password-option' => $_POST['regex-password-option'],
-			'regex-password' => $_POST['regex-password'])), 'autoload' => false];
-			
-			$db = new Db($wpdb);
-			$db->update_config($arr);
-
-			?>
-			<div class="notice notice-success is-dismissible">
-				<p><?php _e( 'The config has been updated', 'password-policy' ); ?></p>
-			</div>
-			<?php
-
+				?>
+				<div class="notice notice-success is-dismissible">
+					<p><?php _e( 'The config has been updated', 'password-policy' ); ?></p>
+				</div>
+				<?php
+			} else {
+				?>
+				<div class="notice notice-error is-dismissible">
+					<p><?php _e( 'Error token invalide', 'password-policy' ); ?></p>
+				</div>
+				<?php
+			}
 		} else {
 			?>
 			<div class="notice notice-error is-dismissible">
@@ -89,7 +148,7 @@ function display_page() {
 /**
  * Check if user has role
  */
-function has_role($roles, $user) {
+function pssp_has_role($roles, $user) {
 	$check_role = array_intersect(array_map('strtolower', $user->roles), array_map('strtolower', $roles));
 
 	if ($check_role) {
@@ -102,7 +161,7 @@ function has_role($roles, $user) {
 /**
  * Send email for reset user password
  */
-function retrieve_password_password_policy($user_data) {
+function pssp_retrieve_password_password_policy($user_data) {
 	$errors 	= new WP_Error();
 
 	// Redefining user_login ensures we return the right case in the email.
@@ -139,15 +198,17 @@ function retrieve_password_password_policy($user_data) {
 }
 
 /**
- * Display users page and action reset mdp user
+ * GET: Display users page 
+ * POST: Reset mdp user
  */
-function display_page_user() {
+function pssp_display_page_user() {
 
 	$users = get_users();
 
-	// action reset mdp user
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		if ($_POST['token'] === $_SESSION['token']) {
+
+			//TODO sanitizing 
 			if (isset($_POST['role_name'])) {
 				$role_name = $_POST['role_name'];
 			} else {
@@ -163,10 +224,10 @@ function display_page_user() {
 			$validor = false;
 			foreach ( $users as $user ) {
 				$has_role = false;
-				$has_role = has_role($role_name, $user);
+				$has_role = pssp_has_role($role_name, $user);
 
 				if ($_POST['full-reset'] || in_array($user->id, $users_id) || $has_role) {
-					$validor = retrieve_password_password_policy($user);
+					$validor = pssp_retrieve_password_password_policy($user);
 				}
 			}
 

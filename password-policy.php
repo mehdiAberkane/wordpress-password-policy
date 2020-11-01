@@ -64,7 +64,7 @@ require_once( PASSWORD_POLICY_VERSION__PLUGIN_DIR . 'src/check_password_policy.p
  */
 function admin_css() {
 	$admin_handle = 'admin_css';
-	$admin_stylesheet = '/wp-content/plugins/password-policy/public/style.css';
+	$admin_stylesheet = plugin_dir_url( __FILE__ ) . 'public/style.css';
 
 	wp_enqueue_style($admin_handle, $admin_stylesheet);
 }
