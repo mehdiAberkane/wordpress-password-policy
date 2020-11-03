@@ -41,8 +41,10 @@ function pssp_check_config($data) {
 
 	if (!is_int(intval($_POST['number-characters'])))
 		return false;
+
+	$password_length = filter_var($_POST['number-characters'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
 	
-	$config_sanitized['number-characters'] = intval($_POST['number-characters']);
+	$config_sanitized['number-characters'] = intval($password_length);
 	
 	if ($_POST['weak-password'] == 'true') {
 		$config_sanitized['weak-password'] = true;
@@ -129,6 +131,8 @@ function pssp_display_config_page() {
 	$val = $pw_config[0]->option_value;
 
 	$data_config = json_decode($pw_config[0]->option_value, true);
+
+	$data_config['number-characters'] = filter_var($data_config['number-characters'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
 
 	$token = New PSSP_Token();
 	$_SESSION['token'] = $token->display_token();
