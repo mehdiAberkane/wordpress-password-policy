@@ -62,21 +62,21 @@ require_once( PASSWORD_POLICY_VERSION__PLUGIN_DIR . 'src/check_password_policy.p
 /**
  * For CSS in BackOffice
  */
-function admin_css() {
+function pssp_admin_css() {
 	$admin_handle = 'admin_css';
 	$admin_stylesheet = plugin_dir_url( __FILE__ ) . 'public/style.css';
 
 	wp_enqueue_style($admin_handle, $admin_stylesheet);
 }
 
-add_action('admin_print_styles', 'admin_css', 11);
+add_action('admin_print_styles', 'pssp_admin_css', 11);
 
 /**
  * Enqueue a script in the WordPress admin, excluding edit.php.
  *
  * @param int $hook Hook suffix for the current admin page.
  */
-function wpdocs_selectively_enqueue_admin_script($hook) {
+function pssp_wpdocs_selectively_enqueue_admin_script($hook) {
 	if ('user-edit.php' == $hook OR 'user-new.php' == $hook OR 'profile.php' == $hook OR 'wp-login.php?action=rp' == $hook) {
 		wp_enqueue_script( 'password-policy-script', plugin_dir_url( __FILE__ ) . 'public/password-policy-script.js', array(), '1.0');
 	}
@@ -86,5 +86,5 @@ function wpdocs_selectively_enqueue_admin_script($hook) {
  * Disable the checkbox for weak password wordpress
  */
 if ($password_policy_config['weak-password']) {
-	add_action( 'admin_enqueue_scripts', 'wpdocs_selectively_enqueue_admin_script' );
+	add_action( 'admin_enqueue_scripts', 'pssp_wpdocs_selectively_enqueue_admin_script' );
 }

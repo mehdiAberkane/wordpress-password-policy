@@ -2,7 +2,6 @@
 /*
  * Display admin page in backoffice
 */
-
 add_action('admin_menu', 'pssp_add_admin_page');
 
 session_start();
@@ -106,7 +105,7 @@ function pssp_display_config_page() {
 
 				?>
 				<div class="notice notice-success is-dismissible">
-					<p><?php _e( 'The config has been updated', 'password-policy' ); ?></p>
+					<p><?php _e( 'Your settings have been updated', 'password-policy' ); ?></p>
 				</div>
 				<?php
 			} else {
@@ -215,11 +214,15 @@ function pssp_display_page_user() {
 				$role_name = [];
 			}
 
+			$role_name = filter_var_array($role_name, FILTER_SANITIZE_STRING);
+
 			if (isset($_POST['users_id'])) {
 				$users_id = $_POST['users_id'];
 			} else {
 				$users_id = [];
 			}
+			
+			$users_id = filter_var_array($users_id, FILTER_SANITIZE_STRING);
 
 			$validor = false;
 			foreach ( $users as $user ) {

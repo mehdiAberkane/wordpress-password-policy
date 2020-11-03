@@ -8,7 +8,6 @@ class PSSP_Db {
 
     public function __construct($wpdb) {
         $this->db = $wpdb;
-        echo $this->db->prefix;
     }
 
     public function set_config($arr) {
