@@ -85,7 +85,6 @@ function pssp_check_config($data) {
 	return $config_sanitized;
 }
 
-
 /**
  * Display config page for password policy
  */
@@ -93,8 +92,9 @@ function pssp_display_config_page() {
 	global $wpdb;
 	global $locale;
 
-	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		if ($_POST['token'] === $_SESSION['token']) {
+	if ($_SERVER['REQUEST_METHOD'] === 'POST' && is_admin() && isset($_POST['securite_nonce'])) {
+
+		if ($_POST['token'] === $_SESSION['token'] && wp_verify_nonce($_POST['securite_nonce'], 'securite-nonce')) {
 			$config_sanitized = pssp_check_config($_POST);
 			if ($config_sanitized) {
 				$arr = ['option_name' => '_password_policy_config', 'option_value' => json_encode(array('weak-password' => $config_sanitized['weak-password'], 'number-characters' => $config_sanitized['number-characters']
@@ -113,7 +113,7 @@ function pssp_display_config_page() {
 			} else {
 				?>
 				<div class="notice notice-error is-dismissible">
-					<p><?php _e( 'Error token invalide', 'password-policy' ); ?></p>
+					<p><?php _e( 'Error form invalide', 'password-policy' ); ?></p>
 				</div>
 				<?php
 			}
@@ -212,21 +212,14 @@ function pssp_display_page_user() {
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		if ($_POST['token'] === $_SESSION['token']) {
 
-			if (isset($_POST['role_name'])) {
+			$role_name = [];
+			$users_id = [];
+
+			if (isset($_POST['role_name']) && array_walk($_POST['role_name'], 'sanitize_text_field'))
 				$role_name = $_POST['role_name'];
-			} else {
-				$role_name = [];
-			}
 
-			$role_name = filter_var_array($role_name, FILTER_SANITIZE_STRING);
-
-			if (isset($_POST['users_id'])) {
+			if (isset($_POST['users_id']) && array_walk($_POST['users_id'], 'intval')) 
 				$users_id = $_POST['users_id'];
-			} else {
-				$users_id = [];
-			}
-			
-			$users_id = filter_var_array($users_id, FILTER_SANITIZE_STRING);
 
 			$validor = false;
 			foreach ( $users as $user ) {

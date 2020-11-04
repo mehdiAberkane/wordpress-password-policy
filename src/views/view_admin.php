@@ -51,6 +51,7 @@
 
         <div class="submit-zone">
             <input type="hidden" name="token" id="token" value="<?php _e($token->display_token()); ?>" />
+            <input type="hidden" name="securite_nonce" value="<?php echo wp_create_nonce('securite-nonce'); ?>"/>
             <input type="submit" value="<?php _e('Save', 'password-policy'); ?>">
         </div>
     </form>
