@@ -1,8 +1,8 @@
 <?php
 /**
- * CLass Db for connect and interact with the bdd
+ * CLass PSSP_Db for connect and interact with the bdd
  */
-class Db {
+class PSSP_Db {
 
     private $db;
 
@@ -11,11 +11,11 @@ class Db {
     }
 
     public function set_config($arr) {
-        $this->db->insert('wp_options', $arr);
+        $this->db->insert($this->db->prefix . 'options', $arr);
     }
 
     public function update_config($arr) {
-        $result = $this->db->replace('wp_options', $arr);
+        $result = $this->db->replace($this->db->prefix . 'options', $arr);
     }
 
     public function get_config() {
@@ -25,6 +25,6 @@ class Db {
     }
 
     public function drop_config() {
-        $result = $this->db->delete('wp_options', array('option_name' => '_password_policy_config'));
+        $result = $this->db->delete($this->db->prefix . 'options', array('option_name' => '_password_policy_config'));
     }
 }

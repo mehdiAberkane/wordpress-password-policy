@@ -3,7 +3,7 @@
 /**
  * Check if the password is correct by the policy
  */
-function check_password_policy($errors, $update, $user) {
+function pssp_check_password_policy($errors, $update, $user) {
 	global $password_policy_config;
 
 	$password = $user->user_pass;
@@ -46,5 +46,5 @@ function check_password_policy($errors, $update, $user) {
 	}
 }
 
-add_action('user_profile_update_errors', 'check_password_policy', 10, 3);
+add_action('user_profile_update_errors', 'pssp_check_password_policy', 10, 3);
 

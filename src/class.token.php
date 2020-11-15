@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class token for protection to CSRF
+ * Class PSSP_Token for protection to CSRF
  */
-class Token {
+class PSSP_Token {
 
     private $token;
 

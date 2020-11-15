@@ -2,8 +2,8 @@
 Contributors: Mehdi Aberkane
 Tags: password, policy, enhance, security
 Requires at least: 4.0
-Tested up to: 5.4
-Stable tag: 0.1
+Tested up to: 5.5
+Stable tag: 1.0
 License: GPLv2 or later
 
 A plugin wordpress for enhance the password policy.
@@ -36,5 +36,6 @@ Upload the Password-policy plugin to your blog, activate it, and enjoy.
 * Finish BackOffice
 
 = 1.0.0 =
-*Release Date - 29 oct 2020*
-First Release
+*Correction from wordpress review
+
+
