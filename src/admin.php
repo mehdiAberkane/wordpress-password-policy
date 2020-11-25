@@ -218,8 +218,8 @@ function pssp_display_page_user() {
 			if (isset($_POST['role_name']) && array_walk($_POST['role_name'], 'sanitize_text_field'))
 				$role_name = $_POST['role_name'];
 
-			if (isset($_POST['users_id']) && array_walk($_POST['users_id'], 'intval')) 
-				$users_id = $_POST['users_id'];
+			if (isset($_POST['users_id']) && array_walk($_POST['users_id'], 'intval'))
+				$users_id = array_map('intval', $_POST['users_id']);
 
 			$validor = false;
 			foreach ( $users as $user ) {
