@@ -216,7 +216,7 @@ function pssp_display_page_user() {
 			$users_id = [];
 
 			if (isset($_POST['role_name']) && array_walk($_POST['role_name'], 'sanitize_text_field'))
-				$role_name = $_POST['role_name'];
+				$role_name = array_map('sanitize_text_field', $_POST['role_name']);
 
 			if (isset($_POST['users_id']) && array_walk($_POST['users_id'], 'intval'))
 				$users_id = array_map('intval', $_POST['users_id']);
